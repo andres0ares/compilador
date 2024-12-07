@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  compilador:
+    build:
+      context: ../ # Diretório onde está o Dockerfile
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ../:/compiler/ # Monta a pasta src do host dentro do container
+    working_dir: /compiler # Define o diretório de trabalho padrão no container
+    stdin_open: true # Modo interativo
+    tty: true        # Modo interativo
