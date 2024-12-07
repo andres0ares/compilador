@@ -1,7 +1,9 @@
-# Para rodar
+# Para rodar 
+### O Docker precisa está rodando
 
-cd docker
+No terminal:
 
+cd docker  
 docker-compose run --rm --build compilador bash
 
 # No container
@@ -16,7 +18,7 @@ make
 
 ## compila o codigo assembly resultante
 
-as --64 -o ./output/compilado.o ./output/modelo.s
+as --64 -o ./output/compilado.o ./output/modelo.s  
 ld -o compilado ./output/compilado.o
 
 ## executa linguagem compilada
