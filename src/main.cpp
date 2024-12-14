@@ -9,21 +9,67 @@ using namespace std;
 namespace fs = std::filesystem;
 
 // Função que gera o código Assembly completo a partir da string fornecida
-std::string gerarCodigoAssembly(const std::string &saida_compilador) {
-    std::string modelo_assembly = R"(
-         .section .text
-         .globl _start
+    std::string gerarCodigoAssembly(const std::string &saida_compilador) {
+        std::string modelo_assembly = R"(
+            .section .text
+            .globl _start
 
-        _start:
-          )" + saida_compilador + R"( 
+            _start:
+            )" + saida_compilador + R"( 
 
-          call imprime_num
-          call sair
+            call imprime_num
+            call sair
 
-          .include "./output/runtime.s"
-    )";
+            .include "./output/runtime.s"
+        )";
 
-    return modelo_assembly;
+        return modelo_assembly;
+    }
+
+std::string primeiraAtividade(ifstream& file) {
+    // Leitura da primeira linha do arquivo
+    std::string linha;
+    getline(file, linha);  
+    file.close();
+
+    int linguagem;
+
+    // Validação da linguagem (numero inteiro)
+    try {
+        size_t pos;
+        linguagem = stoi(linha, &pos);  // Converte a linha para inteiro
+
+        // Verifica se toda a linha foi convertida (sem caracteres extras)
+        if (pos != linha.size()) {
+            cout << "Erro: O arquivo contém caracteres não numéricos." << endl;
+            return "";
+        }
+
+    } catch (const invalid_argument& e) {
+        cout << "Erro: O arquivo não contém um número inteiro válido." << endl;
+        return "";
+    } catch (const out_of_range& e) {
+        cout << "Erro: O número no arquivo está fora do intervalo válido para um inteiro." << endl;
+        return "";
+    }
+
+    // Cria uma string formatada (assembly)
+    ostringstream oss;
+    oss << "mov $" << linguagem << ", %rax";
+
+    return oss.str();
+}
+
+
+std::string segundaAtividade(ifstream& file) {
+    std::string codigo; 
+    std::string linha; 
+
+    while (std::getline(file, linha)) {
+        codigo += "   " + linha + "\n";
+    };
+    file.close();
+    return codigo;
 }
 
 
@@ -43,38 +89,14 @@ int main(int argc, char* argv[]) {
         cout << "Erro ao abrir o arquivo: " << filename << endl;
         return 1;
     }
-    
-    // Leitura da primeira linha do arquivo
-    std::string linha;
-    getline(file, linha);  
-    file.close();
 
-    int linguagem;
+    std::string linguagem_assembly = primeiraAtividade(file);
 
-    // Validação da linguagem (numero inteiro)
-    try {
-        size_t pos;
-        linguagem = stoi(linha, &pos);  // Converte a linha para inteiro
+    // std::string linguagem_assembly = segundaAtividade(file);
 
-        // Verifica se toda a linha foi convertida (sem caracteres extras)
-        if (pos != linha.size()) {
-            cout << "Erro: O arquivo contém caracteres não numéricos." << endl;
-            return 1;
-        }
-
-    } catch (const invalid_argument& e) {
-        cout << "Erro: O arquivo não contém um número inteiro válido." << endl;
-        return 1;
-    } catch (const out_of_range& e) {
-        cout << "Erro: O número no arquivo está fora do intervalo válido para um inteiro." << endl;
+    if (linguagem_assembly.empty()) {
         return 1;
     }
-
-    // Cria uma string formatada (assembly)
-    ostringstream oss;
-    oss << "mov $" << linguagem << ", %rax";
-
-    std::string linguagem_assembly = oss.str();
 
     // Gera o código Assembly completo conforme modelo
     std::string codigo_assembly = gerarCodigoAssembly(linguagem_assembly);
