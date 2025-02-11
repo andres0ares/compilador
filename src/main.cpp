@@ -5,7 +5,8 @@
 #include <cstdlib> 
 #include <filesystem>
 
-#include "atividades/atividade1/atividade1.h"
+#include "atividades/atv2/atv2.h"
+#include "atividades/atv4/atv4.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -40,8 +41,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    Atividade1 atividade1;
-    atividade1.primeiraAtividade(file);
+    // Atv2 atv2;
+    // atv2.atv2_main(file);
+
+    Atv4 atv4;
+    atv4.analise_lexico(file);
 
     return 0;
 }

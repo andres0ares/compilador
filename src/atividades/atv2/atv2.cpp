@@ -1,4 +1,4 @@
-#include "atividade1.h"
+#include "atv2.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,14 +6,8 @@
 #include <cstdlib> 
 #include <filesystem>
 
-
 using namespace std;
 namespace fs = std::filesystem;
-
-
-void Atividade1::sayHello() {
-    std::cout << "Olá, mundo!" << std::endl;
-}
 
 // Função que gera o código Assembly completo a partir da string fornecida
 std::string gerarCodigoAssembly(const std::string &saida_compilador) {
@@ -67,7 +61,7 @@ std::string valida(ifstream& file) {
     return oss.str();
 }
 
-int Atividade1::primeiraAtividade(ifstream& file) {
+int Atv2::atv2_main(ifstream& file) {
 
     std::string linguagem_assembly = valida(file);
     
