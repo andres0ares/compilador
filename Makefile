@@ -9,11 +9,11 @@ CXXFLAGS = -Wall -Wextra -std=c++17
 SRC_DIR = src
 BUILD_DIR = build
 
-# Arquivos fonte
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+# Busca recursiva por todos os arquivos .cpp dentro de SRC_DIR
+SRCS = $(shell find $(SRC_DIR) -name "*.cpp")
 
-# Arquivos objeto (convertendo .cpp para .o)
-OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+# Gera a lista de arquivos objeto, preservando estrutura de diretórios
+OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Regra padrão
 all: $(BUILD_DIR) $(TARGET)
@@ -24,6 +24,7 @@ $(TARGET): $(OBJS)
 
 # Regra para compilar os arquivos objeto
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(dir $@)  # Cria o diretório do objeto, se necessário
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Cria o diretório de build, se não existir
