@@ -8,31 +8,11 @@
 #include <map>
 #include <cctype>
 
+#include "../../models/token/token.h"
+#include "../../models/tokens/tokens.h"
+
 using namespace std;
 namespace fs = std::filesystem;
-
-enum class Tipo {
-    NUMERO = 1,
-    PAREN_ESQ = 2,
-    PAREN_DIR = 3,
-    SOMA = 4,
-    MULT = 5,
-    SUB = 6,
-    DIV = 7,
-    INVALIDO = 8,
-};
-
-// Mapeamento de strings para os valores do enum
-map<Tipo, string> tipoParaString = {
-    {Tipo::NUMERO, "Numero"},
-    {Tipo::PAREN_ESQ, "ParenEsq"},
-    {Tipo::PAREN_DIR, "ParenDir"},
-    {Tipo::SOMA, "Soma"},
-    {Tipo::MULT, "Mult"},
-    {Tipo::SUB, "Sub"},
-    {Tipo::DIV, "Div"},
-    {Tipo::INVALIDO, "invalido"},
-};
 
 Tipo identificarTipo(char c) {
     if (isdigit(c)) return Tipo::NUMERO;
@@ -45,39 +25,13 @@ Tipo identificarTipo(char c) {
     return Tipo::INVALIDO;
 }
 
-
-class Token {
-public:
-    std::string lexema;
-    Tipo tipo;
-    int offset;
-    int linha;
-    int coluna;
-
-    // Construtor
-    Token(std::string lx, Tipo t, int o, int l, int c) : 
-        lexema(lx),
-        tipo(t),
-        offset(o),
-        linha(l), 
-        coluna(c)
-    {}
-
-    void printToken() {
-        if(tipo == Tipo::INVALIDO) 
-            std::cout << "ERROR: caractere inválido: < " << lexema << " > linha: " << linha << ", coluna: " << coluna << endl;
-        else
-            std::cout << "<" << tipoParaString[tipo] << ", '" << lexema << "', " << offset << ">" << endl;
-    }
-};
-
-void create_tokens(ifstream& file) {
-//void create_tokens() {
+Tokens create_tokens(ifstream& file) {
 
     int off_set = -1;
     char caractere;
     int linha = 1;
     int coluna = 0;
+    Tokens tokens_list;
 
     while (file.get(caractere)) { 
 
@@ -85,7 +39,7 @@ void create_tokens(ifstream& file) {
 
         if (caractere == '\n') {
             linha++;
-            coluna = 0; // Resetamos a coluna
+            coluna = 0; 
             continue;
         }
 
@@ -111,7 +65,7 @@ void create_tokens(ifstream& file) {
 
             // Cria o token para o número
             Token token(numero, Tipo::NUMERO, inicio_offset, linha, coluna);
-            token.printToken();
+            tokens_list.adiciona(token);
         }
         else {
             // Identifica o tipo do caractere único
@@ -119,24 +73,30 @@ void create_tokens(ifstream& file) {
             
             // Cria o token 
             Token token(string(1, caractere), tipo, off_set, linha, coluna);
-            token.printToken();
+            tokens_list.adiciona(token);
         }
 
     }
 
     file.close(); // Fechando o arquivo
-    
-    // Token token1("(", Tipo::PAREN_ESQ, 0);
-    // Token token2("2", Tipo::NUMERO, 1);
-    // token1.printToken();
-    // token2.printToken();
+    return tokens_list;
 
 }
 
 int Atv4::analise_lexico(ifstream& file) {
 
-    std::cout << "lendo arquivo " << "output/modelo.s" << std::endl;
-    create_tokens(file);
+    //cria tokens do arquivos
+    Tokens tokens = create_tokens(file);
+
+
+    if(tokens.temTokenInvalido()) {
+        std::cout << "Criacao dos tokens concluida com erro lexico: \n" << endl;
+        tokens.imprimeErros();
+        std::cout << "\ntokens validos: \n" << endl;
+        tokens.imprimeTokensValidos();
+    } else {
+        tokens.imprimeTokens();
+    }
 
     return 0;
 }

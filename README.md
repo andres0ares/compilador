@@ -16,8 +16,13 @@ make
 
 ## executa a analise lexica
 
-./compilador ./input/entrada_ec1.ci
+// com erro:
 
+./compilador ./input/atv4/i1.ci
+
+// sem erro:
+
+./compilador ./input/atv4/i2.ci
 
 # Outras atividades
 
@@ -40,11 +45,11 @@ ld -o compilado ./output/compilado.o
 
 ### executa o compilador
 
-./compilador ./input/Atividade_3/Parte1_1.txt
-./compilador ./input/Atividade_3/Parte1_2.txt
-./compilador ./input/Atividade_3/Parte1_3.txt
-./compilador ./input/Atividade_3/Parte2.txt
-./compilador ./input/Atividade_3/Parte3.txt
+./compilador ./input/atv3/Parte1_1.txt
+./compilador ./input/atv3/Parte1_2.txt
+./compilador ./input/atv3/Parte1_3.txt
+./compilador ./input/atv3/Parte2.txt
+./compilador ./input/atv3/Parte3.txt
 
 
 
