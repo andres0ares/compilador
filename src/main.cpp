@@ -6,23 +6,12 @@
 #include <filesystem>
 
 #include "atividades/atv2/atv2.h"
+#include "atividades/atv3/atv3.h"
 #include "atividades/atv4/atv4.h"
+
 
 using namespace std;
 namespace fs = std::filesystem;
-
-
-std::string segundaAtividade(ifstream& file) {
-    std::string codigo; 
-    std::string linha; 
-
-    while (std::getline(file, linha)) {
-        codigo += "   " + linha + "\n";
-    };
-    file.close();
-    return codigo;
-}
-
 
 int main(int argc, char* argv[]) {
 
@@ -43,6 +32,9 @@ int main(int argc, char* argv[]) {
 
     // Atv2 atv2;
     // atv2.atv2_main(file);
+
+    // Atv3 atv3;
+    // atv3.atv3_main(file);
 
     Atv4 atv4;
     atv4.analise_lexico(file);

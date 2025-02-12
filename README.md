@@ -36,5 +36,15 @@ ld -o compilado ./output/compilado.o
 
 ./compilado
 
+## Atividade 3 
+
+### executa o compilador
+
+./compilador ./input/Atividade_3/Parte1_1.txt
+./compilador ./input/Atividade_3/Parte1_2.txt
+./compilador ./input/Atividade_3/Parte1_3.txt
+./compilador ./input/Atividade_3/Parte2.txt
+./compilador ./input/Atividade_3/Parte3.txt
+
 
 
