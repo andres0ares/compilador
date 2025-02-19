@@ -50,7 +50,14 @@ void Tokens::imprimeErros() const {
     }
 }
 
+std::optional<Token> Tokens::proximoToken() {
 
+     if (listaTokens.empty()) {
+        return std::nullopt; // Retorna um valor nulo se a lista estiver vazia
+    }
 
+    Token primeiroToken = listaTokens.front(); // Obtém o primeiro token
+    listaTokens.erase(listaTokens.begin()); // Remove o primeiro token
 
-
+    return primeiroToken; // Retorna o token removido
+}

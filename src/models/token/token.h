@@ -31,8 +31,10 @@ private:
 
 public:
     Token(std::string lx, Tipo t, int o, int l, int c);
-    Tipo getTipo() const; // Novo método
-    void printToken() const;
+    Tipo getTipo() const; // retorna tipo do token
+    std::string getTipoAsString() const;
+    std::string getValue() const;
+    void printToken() const; // imprime token
 };
 
 #endif // TOKEN_H

@@ -37,6 +37,14 @@ Tipo Token::getTipo() const {
     return tipo;
 }
 
+std::string Token::getTipoAsString() const {
+    return tipoParaString[tipo];
+}
+
+std::string Token::getValue() const {
+    return lexema;
+}
+
 void Token::printToken() const {
     if(tipo == Tipo::INVALIDO) 
         std::cout << "ERROR: caractere inválido: < " << lexema << " > linha: " << linha << ", coluna: " << coluna << endl;

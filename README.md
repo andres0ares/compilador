@@ -12,17 +12,11 @@ docker-compose run --rm --build compilador bash
 
 make
 
-# Atividade 4
+# Atividade 5
 
-## executa a analise lexica
+## executa a analise sintatica
 
-// com erro:
-
-./compilador ./input/atv4/i1.ci
-
-// sem erro:
-
-./compilador ./input/atv4/i2.ci
+./compilador ./input/atv5/i1.ci
 
 # Outras atividades
 
@@ -51,5 +45,16 @@ ld -o compilado ./output/compilado.o
 ./compilador ./input/atv3/Parte2.txt
 ./compilador ./input/atv3/Parte3.txt
 
+## Atividade 4
+
+### executa a analise lexica
+
+// com erro:
+
+./compilador ./input/atv4/i1.ci
+
+// sem erro:
+
+./compilador ./input/atv4/i2.ci
 
 

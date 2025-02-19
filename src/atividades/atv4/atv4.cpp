@@ -25,7 +25,7 @@ Tipo identificarTipo(char c) {
     return Tipo::INVALIDO;
 }
 
-Tokens create_tokens(ifstream& file) {
+Tokens Atv4::create_tokens(ifstream& file) {
 
     int off_set = -1;
     char caractere;
