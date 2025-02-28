@@ -1,6 +1,13 @@
 {
     "files.associations": {
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "vector": "cpp",
+        "filesystem": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp",
+        "map": "cpp",
+        "fstream": "cpp",
+        "optional": "cpp"
     },
     "docker.commands.composeDown": [
         {
