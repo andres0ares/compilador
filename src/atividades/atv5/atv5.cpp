@@ -18,36 +18,73 @@ Expressao* construirArvore(Tokens& tokens) {
     std::optional<Token> token = tokens.proximoToken();
 
     if (!token) {
-        throw std::invalid_argument("\nExcesso de Parentese de abertura ou Expressão Vazia!");
+        throw std::invalid_argument("Expressao Vazia!\n");
     }
     
     if (token->getTipo() == Tipo::NUMERO) {
+        std::optional<Token> proxToken = tokens.proximoToken();
+
+        // verifica se um numero é seguido de outro numero ou parentese aberto
+        if (proxToken->getTipo() == Tipo::NUMERO) {
+            proxToken->printToken();
+            throw std::invalid_argument("Ausência de operador entre operandos\n");
+        }
+        else if (proxToken->getTipo() == Tipo::PAREN_ESQ) {
+            proxToken->printToken();
+            throw std::invalid_argument("Esperva-se um operador\n");
+        
+        } else if(!proxToken)
+            return new Constante(std::stoi(token->getValue()));
+
+        // volta para a posicao do token atual
+        tokens.retrocedeToken();
+
         return new Constante(std::stoi(token->getValue()));
     }
-    else if (token->getTipo() == Tipo::PAREN_ESQ) {
-        Expressao* esquerda = construirArvore(tokens);
-        std::optional<Token> operador = tokens.proximoToken();
 
-        //quando se espera um operador, mas se recebe parentese
-        if(operador->getTipo() == Tipo::PAREN_ESQ || operador->getTipo() == Tipo::PAREN_DIR) {
-            operador->printToken();
-            throw std::invalid_argument("\nToken mal posicionado");
+    else if (token->getTipo() == Tipo::PAREN_ESQ) {
+        std::optional<Token> proxToken = tokens.proximoToken();
+        if (!proxToken) {
+            throw std::invalid_argument("Parêntese de abertura sem conteúdo\n");
         }
+        if (proxToken->getTipo() == Tipo::PAREN_DIR) {
+            proxToken->printToken();
+            throw std::invalid_argument("Parêntese de abertura seguido de fechamento\n");
+        }
+        if (proxToken->getTipo() != Tipo::NUMERO && proxToken->getTipo() != Tipo::PAREN_ESQ) {
+            proxToken->printToken();
+            throw std::invalid_argument("Parêntese de abertura seguido de operador\n");
+        }
+        tokens.retrocedeToken();
+        
+        Expressao* esquerda = construirArvore(tokens);
+
+        std::optional<Token> operador = tokens.proximoToken();
+        if (!operador || (operador->getTipo() != Tipo::SOMA && operador->getTipo() != Tipo::SUB && 
+                          operador->getTipo() != Tipo::MULT && operador->getTipo() != Tipo::DIV)) {
+            throw std::invalid_argument("Operador inválido ou ausente\n");
+        }
+        // avanca para saber se a operacao é valida
+        std::optional<Token> proxDepoisOperador = tokens.proximoToken();
+        if (!proxDepoisOperador) {
+            throw std::invalid_argument("Ausência do segundo operando\n");
+        }
+        else if(proxDepoisOperador->getTipo() == Tipo::PAREN_DIR) {
+            proxDepoisOperador->printToken();
+            throw std::invalid_argument("Operador seguido de parêntese fechado\n");
+        }
+        tokens.retrocedeToken();
 
         Expressao* direita = construirArvore(tokens);
-        auto paren_direito = tokens.proximoToken(); //consome parentese direito
-
-        //quando a operacao binaria nao tem parentese de fechamento
-        if(paren_direito->getTipo() != Tipo::PAREN_DIR) {
-            paren_direito->printToken();
-
-            throw std::invalid_argument("\nAusencia do Parentese direito");
+        std::optional<Token> parentesesDir = tokens.proximoToken();
+        if (!parentesesDir || parentesesDir->getTipo() != Tipo::PAREN_DIR) {
+            throw std::invalid_argument("Parêntese de fechamento ausente\n");
         }
         return new OperacaoBin(operador->getValue()[0], esquerda, direita);
     }
-    //erros gerais
-    throw std::invalid_argument("\nExpressão malformada");
+    throw std::invalid_argument("Erro: Expressão malformada");
 }
+
 
 int Atv5::analise_sintatico(ifstream& file) {
 
@@ -65,14 +102,20 @@ int Atv5::analise_sintatico(ifstream& file) {
 
     try {    
         //construcao da arvore sintatica
-        Expressao* raiz = construirArvore(tokens);  
+        Expressao* raiz = construirArvore(tokens);
+
+        // verifica se sobra tokens apos a arvore ter sido construida
+        if (tokens.proximoToken()) {
+            throw std::runtime_error("Expressao tem tokens extras ou pareteses desbalanceados\n");
+        }
+
         std::cout << "\nArvore Sintatica:\n" << endl;
         raiz->imprimir();
         std::cout << "\nValor do programa: " << raiz->avaliar() << std::endl;
 
     
         } catch (const std::invalid_argument& e) {
-            std::cerr << "Erro: " << e.what() << std::endl;
+            std::cerr << "\nErro: " << e.what() << std::endl;
             return 1;
         }
     return 0;

@@ -11,9 +11,12 @@
 class Tokens {
 private:
     std::vector<Token> listaTokens;
+    size_t indiceAtual;
 
 public:
+    Tokens();
     void adiciona(const Token& token);
+    void retrocedeToken();
     void imprimeTokens() const;
     void imprimeTokensValidos() const;
     void imprimeErros() const;

@@ -11,11 +11,14 @@
 
 using namespace std;
 
+Tokens::Tokens() {
+    indiceAtual = 0;
+}
+
 // Adiciona um token à lista
 void Tokens::adiciona(const Token& token) {
     listaTokens.push_back(token);
 }
-
 
 bool Tokens::temTokenInvalido() const {
     for (const Token& token : listaTokens) {
@@ -50,14 +53,18 @@ void Tokens::imprimeErros() const {
     }
 }
 
+// realoca um token que foi removido
+void Tokens::retrocedeToken() {
+    if(indiceAtual > 0){
+        indiceAtual--; 
+    }
+}
+
+// mostra o token atual e passa para o proximo
 std::optional<Token> Tokens::proximoToken() {
 
-     if (listaTokens.empty()) {
-        return std::nullopt; // Retorna um valor nulo se a lista estiver vazia
+    if (indiceAtual < listaTokens.size()) {
+        return listaTokens[indiceAtual++];
     }
-
-    Token primeiroToken = listaTokens.front(); // Obtém o primeiro token
-    listaTokens.erase(listaTokens.begin()); // Remove o primeiro token
-
-    return primeiroToken; // Retorna o token removido
+    return std::nullopt; // Retorna um valor nulo quando percorrer toda a lista
 }
