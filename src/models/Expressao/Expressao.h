@@ -7,6 +7,7 @@ public:
     virtual int avaliar() const = 0;
     // virtual void imprimir() const = 0;
     virtual void imprimir(int nivel = 0) const = 0;
+    virtual std::string gerar_codigo() const = 0;
 };
 
 // ========================================================================
@@ -18,8 +19,8 @@ private:
 public:
     explicit Constante(int v);
     int avaliar() const override;
-    // void imprimir() const override;
     void imprimir(int nivel) const override;
+    std::string gerar_codigo() const override;
 };
 
 // ========================================================================
@@ -33,8 +34,8 @@ private:
 public:
     OperacaoBin(char op, Expressao* esq, Expressao* dir);
     int avaliar() const override;
-    // void imprimir() const override;
     void imprimir(int nivel) const override;
+    std::string gerar_codigo() const override;
 };
 
 // ========================================================================

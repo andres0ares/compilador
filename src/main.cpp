@@ -9,6 +9,7 @@
 #include "atividades/atv3/atv3.h"
 #include "atividades/atv4/atv4.h"
 #include "atividades/atv5/atv5.h"
+#include "atividades/atv6/atv6.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -39,8 +40,11 @@ int main(int argc, char* argv[]) {
     // Atv4 atv4;
     // atv4.analise_lexico(file);
 
-    Atv5 atv5;
-    atv5.analise_sintatico(file);
+    // Atv5 atv5;
+    // atv5.analise_sintatico(file);
+
+    Atv6 atv6;
+    atv6.codigo_assembly(file);
 
     return 0;
 }

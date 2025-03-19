@@ -62,4 +62,38 @@ void OperacaoBin::imprimir(int nivel = 0) const {
     esquerda->imprimir(nivel + 1);
 }
 
+// ============== GERAR CODIGO ============================
+
+std::string operador_assembly(char op) {
+    switch (op) {
+        case '+': 
+            return "add";
+        case '-': 
+            return "sub";
+        case '*': 
+            return "imul";
+        case '/': 
+            return "div";
+        default: throw std::runtime_error("Operador desconhecido");
+    }
+}
+
+std::string OperacaoBin::gerar_codigo() const {
+
+    std::string op_esq = esquerda->gerar_codigo();
+    std::string op_dir = direita->gerar_codigo();
+
+    std::string operacao = operador_assembly(operador) + " %rbx, %rax";
+
+    return op_esq + R"(
+        push %rax
+        )" + op_dir + R"( 
+        pop %rbx
+        )" + operacao;
+}
+
+std::string Constante::gerar_codigo() const {
+    return "mov " + std::to_string(valor) + ", %rax";
+}
+
 // ========================================================================

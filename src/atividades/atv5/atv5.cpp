@@ -120,3 +120,37 @@ int Atv5::analise_sintatico(ifstream& file) {
         }
     return 0;
 }
+
+std::optional<Expressao*> Atv5::get_arvore(ifstream& file) {
+
+    Atv4 atv4;
+    
+    //cria tokens do arquivos
+    Tokens tokens = atv4.create_tokens(file);
+
+    //se possuir erro lexico exibe o erro e retorna
+    if(tokens.temTokenInvalido()) {
+        //std::cout << "Criacao dos tokens concluida com erro lexico: \n" << endl;
+        tokens.imprimeErros();
+        throw std::runtime_error("Erro lexico");
+        return std::nullopt;
+    } 
+
+    try {    
+        //construcao da arvore sintatica
+        Expressao* raiz = construirArvore(tokens);
+
+        // verifica se sobra tokens apos a arvore ter sido construida
+        if (tokens.proximoToken()) {
+            throw std::runtime_error("Expressao tem tokens extras ou pareteses desbalanceados\n");
+        }
+
+        return raiz;
+
+    
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "\nErro: " << e.what() << std::endl;
+        return std::nullopt;
+    }
+
+}
