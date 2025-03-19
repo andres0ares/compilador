@@ -10,7 +10,7 @@ using namespace std;
 namespace fs = std::filesystem;
 
 // Função que gera o código Assembly completo a partir da string fornecida
-std::string gerarCodigoAssembly(const std::string &saida_compilador) {
+std::string Atv2::gerarCodigoAssembly(const std::string &saida_compilador) {
     std::string modelo_assembly = R"(
         .section .text
         .globl _start
@@ -25,6 +25,28 @@ std::string gerarCodigoAssembly(const std::string &saida_compilador) {
     )";
 
     return modelo_assembly;
+}
+
+int Atv2::geraAssemblyFile(const std::string &codigo) {
+    // Salva código Assembly 
+    std::ofstream arquivo("output/modelo.s");
+
+    if (arquivo.is_open()) {
+      
+        arquivo << codigo; 
+        arquivo.close();
+
+        std::cout << "Codigo assembly salvo em " << "output/modelo.s" << std::endl;
+    } else {
+        std::cerr << "Erro ao abrir o arquivo para escrita!" << std::endl;
+    }
+
+    // Caminho do arquivo de origem (runtime.s no diretório assembly)
+    fs::path origem = fs::current_path() / "src" / "assembly" / "runtime.s";
+    fs::path destino = fs::current_path() / "output" / "runtime.s";
+    fs::copy(origem, destino, fs::copy_options::overwrite_existing);
+
+    return 1;
 }
 
 std::string valida(ifstream& file) {

@@ -43,8 +43,11 @@ int main(int argc, char* argv[]) {
     // Atv5 atv5;
     // atv5.analise_sintatico(file);
 
+    // Atv6 atv6;
+    // atv6.codigo_assembly(file);
+
     Atv6 atv6;
-    atv6.codigo_assembly(file);
+    atv6.testes_codigo_assembly(file);
 
     return 0;
 }

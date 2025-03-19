@@ -6,7 +6,8 @@
 
 class Atv6 {
 public:
-    int codigo_assembly(std::ifstream& file);
+    int codigo_assembly(std::ifstream& file, bool show_value);
+    int testes_codigo_assembly(std::ifstream& file);
 };
 
 #endif

@@ -46,14 +46,6 @@ int OperacaoBin::avaliar() const {
     }
 }
 
-//          script do professor         //
-// void OperacaoBin::imprimir() const  {
-//     std::cout << "(";
-//     esquerda->imprimir();
-//     std::cout << " " << operador << " ";
-//     direita->imprimir();
-//     std::cout << ")";
-// }
 
 //print da arvore de forma horizontal
 void OperacaoBin::imprimir(int nivel = 0) const {
@@ -93,7 +85,7 @@ std::string OperacaoBin::gerar_codigo() const {
 }
 
 std::string Constante::gerar_codigo() const {
-    return "mov " + std::to_string(valor) + ", %rax";
+    return "mov $" + std::to_string(valor) + ", %rax";
 }
 
 // ========================================================================
