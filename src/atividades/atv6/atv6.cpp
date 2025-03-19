@@ -6,6 +6,7 @@
 #include <cstdlib> 
 #include <cctype>
 #include <filesystem>
+#include <algorithm>
 
 #include "../../models/token/token.h"
 #include "../../models/tokens/tokens.h"
@@ -16,8 +17,29 @@
 using namespace std;
 
 
+int executaCodigoAssembly() {
+   
+    if (system("as --64 -o ./output/compilado.o ./output/modelo.s") != 0) {
+        std::cerr << "Erro ao montar o código assembly!\n";
+        return 1;
+    }
 
-int Atv6::codigo_assembly(ifstream& file, bool show_value = false) {
+    if (system("ld -o compilado ./output/compilado.o") != 0) {
+        std::cerr << "Erro ao ligar o código!\n";
+        return 2;
+    }
+
+    if (system("./compilado") != 0) {
+        std::cerr << "Erro ao executar o programa!\n";
+        return 3;
+    }
+
+    return 0;
+}
+
+
+
+int Atv6::codigo_assembly(ifstream& file, bool test = false) {
 
     Atv5 atv5;
     Atv2 atv2;
@@ -30,7 +52,7 @@ int Atv6::codigo_assembly(ifstream& file, bool show_value = false) {
             throw std::invalid_argument("Expressao Vazia!\n");
         }
 
-        if(show_value) {
+        if(test) {
             std::cout <<"\nValor esperado:" << std::endl;
             std::cout << (*raiz)->avaliar() << "\n" << std::endl;
             std::cout << "\nCodigo assembly gerado:\n";
@@ -41,6 +63,11 @@ int Atv6::codigo_assembly(ifstream& file, bool show_value = false) {
         std::cout << codigo_assembly << std::endl;
 
         atv2.geraAssemblyFile(codigo_assembly);
+
+        if(test) {
+            std::cout <<"\nValor obtido: " << std::endl;
+            executaCodigoAssembly();
+        }
     
     } catch (const std::invalid_argument& e) {
         std::cerr << "\nErro: " << e.what() << std::endl;
@@ -50,17 +77,19 @@ int Atv6::codigo_assembly(ifstream& file, bool show_value = false) {
     return 0;
 }
 
-int executaCodigoAssembly() {
-    return 0
-}
 
 int Atv6::testes_codigo_assembly(ifstream& file) {
 
     std::string path;
 
+    std::cout << "\n-------- EXECUCAO DE TESTES --------\n";
+
     while (std::getline(file, path)) {
 
-        std::ifstream test_file(path);
+        path.erase(std::remove_if(path.begin(), path.end(), ::isspace), path.end());
+
+        std::ifstream test_file;
+        test_file.open(path); // Abre o arquivo separadamente
         
         if (!test_file.is_open()) {
             std::cerr << "Erro: Não foi possível abrir o arquivo: " << path << "\n";

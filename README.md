@@ -12,11 +12,9 @@ docker-compose run --rm --build compilador bash
 
 make
 
-# Atividade 5
+# Atividade 6
 
-## executa a analise sintatica
-
-./compilador ./input/atv5/i1.ci
+./compilador ./input/atv6/entradas.txt
 
 # Outras atividades
 
@@ -57,4 +55,8 @@ ld -o compilado ./output/compilado.o
 
 ./compilador ./input/atv4/i2.ci
 
+## Atividade 5
 
+### executa a analise sintatica
+
+./compilador ./input/atv5/i1.ci

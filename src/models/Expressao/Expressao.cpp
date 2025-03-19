@@ -59,13 +59,21 @@ void OperacaoBin::imprimir(int nivel = 0) const {
 std::string operador_assembly(char op) {
     switch (op) {
         case '+': 
-            return "add";
+            return "add %rbx, %rax";
         case '-': 
-            return "sub";
+            return R"( 
+            sub %rax, %rbx
+            mov %rbx, %rax
+            )";
         case '*': 
-            return "imul";
+            return "imul %rbx, %rax";
         case '/': 
-            return "div";
+            return R"( 
+            mov %rbx, %rcx
+            mov %rax, %rbx
+            mov %rcx, %rax
+            idiv %rbx
+            )";
         default: throw std::runtime_error("Operador desconhecido");
     }
 }
@@ -75,7 +83,7 @@ std::string OperacaoBin::gerar_codigo() const {
     std::string op_esq = esquerda->gerar_codigo();
     std::string op_dir = direita->gerar_codigo();
 
-    std::string operacao = operador_assembly(operador) + " %rbx, %rax";
+    std::string operacao = operador_assembly(operador); 
 
     return op_esq + R"(
         push %rax
