@@ -11,6 +11,7 @@
 #include "../../models/token/token.h"
 #include "../../models/tokens/tokens.h"
 #include "../../models/Expressao/Expressao.h"
+#include "../atv7/atv7.h"
 #include "../atv5/atv5.h"
 #include "../atv2/atv2.h"
 
@@ -41,15 +42,18 @@ int executaCodigoAssembly() {
 
 int Atv6::codigo_assembly(ifstream& file, bool test = false) {
 
-    Atv5 atv5;
+    // Atv5 atv5;
+    Atv7 atv7;
     Atv2 atv2;
   
     try {    
         //construcao da arvore sintatica
-        std::optional<Expressao*> raiz = atv5.get_arvore(file);
+        // std::optional<Expressao*> raiz = atv5.get_arvore(file);
+        std::optional<Expressao*> raiz = atv7.analise_sintatico(file);
 
         if (!raiz.has_value()) {
-            throw std::invalid_argument("Expressao Vazia!\n");
+            // throw std::invalid_argument("Expressao Vazia!\n");
+            return 1;
         }
 
         if(test) {

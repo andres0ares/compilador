@@ -10,6 +10,7 @@
 #include "atividades/atv4/atv4.h"
 #include "atividades/atv5/atv5.h"
 #include "atividades/atv6/atv6.h"
+#include "atividades/atv7/atv7.h"
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -46,6 +47,7 @@ int main(int argc, char* argv[]) {
     // Atv6 atv6;
     // atv6.codigo_assembly(file);
 
+    // GERADOR PARA ATIVIDADE 7!!
     Atv6 atv6;
     atv6.testes_codigo_assembly(file);
 

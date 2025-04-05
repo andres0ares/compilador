@@ -1,0 +1,8 @@
+./input/atv7/i1.ci
+./input/atv7/i2.ci
+./input/atv7/i3.ci
+./input/atv7/i4.ci
+./input/atv7/i5.ci
+./input/atv7/i6.ci
+./input/atv7/i7.ci
+./input/atv7/i8.ci
