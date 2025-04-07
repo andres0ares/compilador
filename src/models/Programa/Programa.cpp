@@ -31,6 +31,15 @@ void Programa::imprimeTokens() const {
     dec_final->printToken();
 }
 
+bool Programa::identificadorDeclarado(std::string ident) const {
+    for (const auto& declaracao : declaracoes) {
+        if(declaracao.getIdentificador() == ident) {
+            return true;
+        }
+    }
+    return false;
+}
+
 std::string Programa::gerar_declaracoes() const {
 
     std::string saida = "";

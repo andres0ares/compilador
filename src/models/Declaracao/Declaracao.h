@@ -17,7 +17,7 @@ public:
     Declaracao(Token t, Expressao* e);
     Token getToken() const;
     Expressao* getExpressao() const;
-    Tipo getTipo() const; // retorna tipo do token
+    Tipo getTipo() const; // retorna tipo do token: identificador ou retorna
     std::string getIdentificador() const;
     std::string getCodigoExp() const;
     std::string gerar_codigo() const;

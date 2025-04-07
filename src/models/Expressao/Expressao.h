@@ -8,6 +8,7 @@ public:
     // virtual void imprimir() const = 0;
     virtual void imprimir(int nivel = 0) const = 0;
     virtual std::string gerar_codigo() const = 0;
+    virtual std::string getIdentificadores() const = 0;
 };
 
 // ========================================================================
@@ -21,6 +22,7 @@ public:
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
+    std::string getIdentificadores() const override;
 };
 
 // ========================================================================
@@ -34,6 +36,7 @@ public:
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
+    std::string getIdentificadores() const override;
 };
 
 
@@ -50,6 +53,7 @@ public:
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
+    std::string getIdentificadores() const override;
 };
 
 // ========================================================================

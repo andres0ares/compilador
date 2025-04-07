@@ -12,51 +12,32 @@ docker-compose run --rm --build compilador bash
 
 make
 
-# Atividade 6
+# Atividade 8
 
-./compilador ./input/atv6/entradas.txt
+./compilador ./input/atv8/entradas.txt
 
-# Outras atividades
+## Outras atividade:
 
-## Atividade 2 
+### atv2
 
-### executa o compilador
+https://github.com/andres0ares/compilador/tree/95ee26cbb371b6f0783493d4a9684402751ac8cc
 
-./compilador ./input/entrada_default.ci
+### atv3
 
-### compila o codigo assembly resultante
+https://github.com/andres0ares/compilador/tree/b102a1c4753dae88e9ccfe8a06527ecd300dd9cb
 
-as --64 -o ./output/compilado.o ./output/modelo.s  
-ld -o compilado ./output/compilado.o
+### atv4
 
-### executa linguagem compilada
+https://github.com/andres0ares/compilador/tree/0ead0dd129a1f75d0e275d81711318836da8f8ab
 
-./compilado
+### atv5
 
-## Atividade 3 
+https://github.com/andres0ares/compilador/tree/9a4e4268e8dc7390364c81364dc2f7e3fb975195
 
-### executa o compilador
+### atv6
 
-./compilador ./input/atv3/Parte1_1.txt
-./compilador ./input/atv3/Parte1_2.txt
-./compilador ./input/atv3/Parte1_3.txt
-./compilador ./input/atv3/Parte2.txt
-./compilador ./input/atv3/Parte3.txt
+https://github.com/andres0ares/compilador/tree/fabcb8092567554acfebd3ebe2b6f741c2456662
 
-## Atividade 4
+### atv7
 
-### executa a analise lexica
-
-// com erro:
-
-./compilador ./input/atv4/i1.ci
-
-// sem erro:
-
-./compilador ./input/atv4/i2.ci
-
-## Atividade 5
-
-### executa a analise sintatica
-
-./compilador ./input/atv5/i1.ci
+https://github.com/andres0ares/compilador/commit/fc842e6f7a2c9773aa96f7964e831082b9cbcfdb

@@ -62,48 +62,64 @@ Tokens Atv4::create_tokens(ifstream& file) {
                 off_set++; 
             }
 
-            // Volta um caractere pois leu um a mais no último `file.get`
-            file.unget();
+            //identificador invalido
+            if(identificarTipo(caractere) == Tipo::INVALIDO && !isspace(caractere)) {
 
-            // Cria o token para o número
-            Token token(numero, Tipo::NUMERO, inicio_offset, linha, coluna);
-            tokens_list.adiciona(token);
-        }
-        else {
-            // Identifica o tipo do caractere único
-            Tipo tipo = identificarTipo(caractere);
+                numero += caractere;
 
-            //pode ser var ou return
-            if(tipo == Tipo::INVALIDO) {
-
-                string palavra(1, caractere);
-                int inicio_offset = off_set; 
-            
-                // Lê o restante
-                while (file.get(caractere) && !isspace(caractere) && identificarTipo(caractere) == Tipo::INVALIDO ) {
-                    palavra += caractere;
+                while (file.get(caractere) && !isspace(caractere)) {
+                    numero += caractere;
                     off_set++; 
                 }
 
                 // Volta um caractere pois leu um a mais no último `file.get`
                 file.unget();
 
-                if(palavra == "retorna") {
-                    Token token(palavra, Tipo::RETORNA, inicio_offset, linha, coluna);
-                    tokens_list.adiciona(token);
-                }else{
-                    Token token(palavra, Tipo::IDENTIFICADOR, inicio_offset, linha, coluna);
-                    tokens_list.adiciona(token);
-                }
+                Token token(numero, Tipo::INVALIDO, inicio_offset, linha, coluna);
+                tokens_list.adiciona(token);
 
             }else{
-                // Cria o token 
-                Token token(string(1, caractere), tipo, off_set, linha, coluna);
+                // Volta um caractere pois leu um a mais no último `file.get`
+                file.unget();
+
+                // Cria o token para o número
+                Token token(numero, Tipo::NUMERO, inicio_offset, linha, coluna);
                 tokens_list.adiciona(token);
-            }
-            
-            
+            } 
+
+            continue;         
         }
+
+        if(identificarTipo(caractere) != Tipo::INVALIDO) {
+
+            // Cria o token 
+            Token token(string(1, caractere), identificarTipo(caractere), off_set, linha, coluna);
+            tokens_list.adiciona(token);
+
+            continue;
+        }
+
+      
+        string palavra(1, caractere);
+        int inicio_offset = off_set; 
+    
+        // Lê o restante
+        while (file.get(caractere) && !isspace(caractere) && identificarTipo(caractere) == Tipo::INVALIDO ) {
+            palavra += caractere;
+            off_set++; 
+        }
+
+        // Volta um caractere pois leu um a mais no último `file.get`
+        file.unget();
+
+        if(palavra == "retorna") {
+            Token token(palavra, Tipo::RETORNA, inicio_offset, linha, coluna);
+            tokens_list.adiciona(token);
+        }else{
+            Token token(palavra, Tipo::IDENTIFICADOR, inicio_offset, linha, coluna);
+            tokens_list.adiciona(token);
+        }
+
 
     }
 

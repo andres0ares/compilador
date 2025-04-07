@@ -19,6 +19,7 @@ public:
     void adiciona(const Declaracao& declaracao);
     void adicionaFinal(const Declaracao& declaracao);
     void imprimeTokens() const;
+    bool identificadorDeclarado(std::string ident) const;
     std::string gerar_codigo() const;
     std::string gerar_declaracoes() const;
 };

@@ -18,6 +18,9 @@ int Constante::avaliar() const {
 void Constante::imprimir(int nivel = 0) const {
     std::cout << std::string(nivel * 4, ' ') << valor << std::endl;
 }
+std::string Constante::getIdentificadores() const {
+    return "";
+}
 
 // =======================================================================
 
@@ -35,6 +38,10 @@ int Identificador::avaliar() const {
 
 void Identificador::imprimir(int nivel = 0) const {
     std::cout << std::string(nivel * 4, ' ') << valor << std::endl;
+}
+
+std::string Identificador::getIdentificadores() const {
+    return valor + " ";
 }
 
 // ========================================================================
@@ -70,6 +77,12 @@ void OperacaoBin::imprimir(int nivel = 0) const {
     direita->imprimir(nivel + 1);
     std::cout << std::string(nivel * 4, ' ') << operador << std::endl;
     esquerda->imprimir(nivel + 1);
+}
+
+std::string OperacaoBin::getIdentificadores() const {
+    std::string dir = direita->getIdentificadores();
+    std::string esq = esquerda->getIdentificadores();
+    return dir + esq;
 }
 
 // ============== GERAR CODIGO ============================

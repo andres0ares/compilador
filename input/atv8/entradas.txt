@@ -1,2 +1,6 @@
 ./input/atv8/i1.ci
 ./input/atv8/i2.ci
+./input/atv8/i3.ci
+./input/atv8/i4.ci
+./input/atv8/i5.ci
+./input/atv8/i6.ci
