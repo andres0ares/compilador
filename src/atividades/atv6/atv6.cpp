@@ -49,21 +49,24 @@ int Atv6::codigo_assembly(ifstream& file, bool test = false) {
     try {    
         //construcao da arvore sintatica
         // std::optional<Expressao*> raiz = atv5.get_arvore(file);
-        std::optional<Expressao*> raiz = atv7.analise_sintatico(file);
+        std::optional<Programa> programa = atv7.analise_sintatico(file);
 
-        if (!raiz.has_value()) {
+        if (!programa.has_value()) {
             // throw std::invalid_argument("Expressao Vazia!\n");
             return 1;
         }
 
-        if(test) {
-            std::cout <<"\nValor esperado:" << std::endl;
-            std::cout << (*raiz)->avaliar() << "\n" << std::endl;
-            std::cout << "\nCodigo assembly gerado:\n";
-        }
+        //programa->imprimeTokens();
 
+        std::string codigo_assembly = atv2.gerarCodigoAssemblyComDeclaracao(programa->gerar_codigo(), programa->gerar_declaracoes());
 
-        std::string codigo_assembly = atv2.gerarCodigoAssembly((*raiz)->gerar_codigo());
+        // if(test) {
+        //     std::cout <<"\nValor esperado:" << std::endl;
+        //     std::cout << (programa).avaliar() << "\n" << std::endl;
+        //     std::cout << "\nCodigo assembly gerado:\n";
+        // }
+
+        // std::string codigo_assembly = atv2.gerarCodigoAssembly((programa).gerar_codigo());
         std::cout << codigo_assembly << std::endl;
 
         atv2.geraAssemblyFile(codigo_assembly);

@@ -10,6 +10,26 @@ using namespace std;
 namespace fs = std::filesystem;
 
 // Função que gera o código Assembly completo a partir da string fornecida
+std::string Atv2::gerarCodigoAssemblyComDeclaracao(const std::string &saida_compilador, const std::string &declaracoes) {
+    std::string modelo_assembly =
+    declaracoes + 
+     R"(
+        .section .text
+        .globl _start
+
+        _start:
+        )" + saida_compilador + R"( 
+
+        call imprime_num
+        call sair
+
+        .include "./output/runtime.s"
+    )";
+
+    return modelo_assembly;
+}
+
+// Função que gera o código Assembly completo a partir da string fornecida
 std::string Atv2::gerarCodigoAssembly(const std::string &saida_compilador) {
     std::string modelo_assembly = R"(
         .section .text

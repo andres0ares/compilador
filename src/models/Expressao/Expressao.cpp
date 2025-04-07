@@ -19,6 +19,24 @@ void Constante::imprimir(int nivel = 0) const {
     std::cout << std::string(nivel * 4, ' ') << valor << std::endl;
 }
 
+// =======================================================================
+
+Identificador::Identificador(std::string v) : 
+    valor(v) 
+{}
+
+int Identificador::avaliar() const {
+    return 0;
+}
+
+// void Constante::imprimir() const {
+//     std::cout << valor; 
+// }
+
+void Identificador::imprimir(int nivel = 0) const {
+    std::cout << std::string(nivel * 4, ' ') << valor << std::endl;
+}
+
 // ========================================================================
 
 OperacaoBin::OperacaoBin(char op, Expressao* esq, Expressao* dir) :
@@ -85,7 +103,7 @@ std::string OperacaoBin::gerar_codigo() const {
 
     std::string operacao = operador_assembly(operador); 
 
-    return op_esq + R"(
+    return "        " + op_esq + R"(
         push %rax
         )" + op_dir + R"( 
         pop %rbx
@@ -94,6 +112,10 @@ std::string OperacaoBin::gerar_codigo() const {
 
 std::string Constante::gerar_codigo() const {
     return "mov $" + std::to_string(valor) + ", %rax";
+}
+
+std::string Identificador::gerar_codigo() const {
+    return "mov " + valor + ", %rax";
 }
 
 // ========================================================================

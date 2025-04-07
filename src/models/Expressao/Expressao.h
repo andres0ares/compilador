@@ -25,6 +25,20 @@ public:
 
 // ========================================================================
 
+class Identificador : public Expressao {
+private:
+    std::string valor;
+
+public:
+    explicit Identificador(std::string v);
+    int avaliar() const override;
+    void imprimir(int nivel) const override;
+    std::string gerar_codigo() const override;
+};
+
+
+// ========================================================================
+
 class OperacaoBin : public Expressao {
 private:
     char operador;

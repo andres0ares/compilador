@@ -17,6 +17,8 @@ namespace fs = std::filesystem;
 Tipo identificarTipo(char c) {
     if (isdigit(c)) return Tipo::NUMERO;
     if (c == '(') return Tipo::PAREN_ESQ;
+    if (c == '=') return Tipo::IGUAL;
+    if (c == ';') return Tipo::PTVIRG;
     if (c == ')') return Tipo::PAREN_DIR;
     if (c == '+') return Tipo::SOMA;
     if (c == '-') return Tipo::SUB;
@@ -70,10 +72,37 @@ Tokens Atv4::create_tokens(ifstream& file) {
         else {
             // Identifica o tipo do caractere único
             Tipo tipo = identificarTipo(caractere);
+
+            //pode ser var ou return
+            if(tipo == Tipo::INVALIDO) {
+
+                string palavra(1, caractere);
+                int inicio_offset = off_set; 
             
-            // Cria o token 
-            Token token(string(1, caractere), tipo, off_set, linha, coluna);
-            tokens_list.adiciona(token);
+                // Lê o restante
+                while (file.get(caractere) && !isspace(caractere) && identificarTipo(caractere) == Tipo::INVALIDO ) {
+                    palavra += caractere;
+                    off_set++; 
+                }
+
+                // Volta um caractere pois leu um a mais no último `file.get`
+                file.unget();
+
+                if(palavra == "retorna") {
+                    Token token(palavra, Tipo::RETORNA, inicio_offset, linha, coluna);
+                    tokens_list.adiciona(token);
+                }else{
+                    Token token(palavra, Tipo::IDENTIFICADOR, inicio_offset, linha, coluna);
+                    tokens_list.adiciona(token);
+                }
+
+            }else{
+                // Cria o token 
+                Token token(string(1, caractere), tipo, off_set, linha, coluna);
+                tokens_list.adiciona(token);
+            }
+            
+            
         }
 
     }

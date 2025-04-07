@@ -51,5 +51,8 @@ int main(int argc, char* argv[]) {
     Atv6 atv6;
     atv6.testes_codigo_assembly(file);
 
+    // Atv8 atv8;
+    // atv8.codigo_assembly(file);
+
     return 0;
 }
