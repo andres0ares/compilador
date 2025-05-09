@@ -12,9 +12,9 @@ docker-compose run --rm --build compilador bash
 
 make
 
-# Atividade 8
+# Atividade 9
 
-./compilador ./input/atv8/entradas.txt
+./compilador ./input/atv9/entradas.txt
 
 ## Outras atividade:
 
@@ -40,4 +40,12 @@ https://github.com/andres0ares/compilador/tree/fabcb8092567554acfebd3ebe2b6f741c
 
 ### atv7
 
-https://github.com/andres0ares/compilador/commit/fc842e6f7a2c9773aa96f7964e831082b9cbcfdb
+https://github.com/andres0ares/compilador/tree/fc842e6f7a2c9773aa96f7964e831082b9cbcfdb
+
+### atv 8
+
+https://github.com/andres0ares/compilador/tree/832d79c47cb6dbae12257852faa29a9e913c2336
+
+### atv9 
+
+https://github.com/andres0ares/compilador/tree/911ce3e3c3ac5d647075fb94160888d93339f518
