@@ -1,0 +1,12 @@
+a = 3;
+b = 4;
+resultado = 0;
+{
+if a + b == 7 {
+resultado = 50;
+}
+else {
+resultado = 99;
+}
+return resultado;
+}

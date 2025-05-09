@@ -1,14 +1,17 @@
 #pragma once
-#include "../token/token.h"
+#include <set>
 #include <string>
+#include "../token/token.h"
+#include "../tokens/tokens.h"
 
 class Expressao {
 public:
+    static Expressao* parse(Tokens& tokens);
     virtual int avaliar() const = 0;
     // virtual void imprimir() const = 0;
     virtual void imprimir(int nivel = 0) const = 0;
     virtual std::string gerar_codigo() const = 0;
-    virtual std::string getIdentificadores() const = 0;
+    virtual std::set<std::string> getVariaveis() const = 0;
 };
 
 // ========================================================================
@@ -22,21 +25,21 @@ public:
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
-    std::string getIdentificadores() const override;
+    std::set<std::string> getVariaveis() const override;
 };
 
 // ========================================================================
 
-class Identificador : public Expressao {
+class Variavel : public Expressao {
 private:
     std::string valor;
 
 public:
-    explicit Identificador(std::string v);
+    explicit Variavel(std::string v);
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
-    std::string getIdentificadores() const override;
+    std::set<std::string> getVariaveis() const override;
 };
 
 
@@ -44,16 +47,16 @@ public:
 
 class OperacaoBin : public Expressao {
 private:
-    char operador;
+    Tipo operador;
     Expressao* esquerda;
     Expressao* direita;
     
 public:
-    OperacaoBin(char op, Expressao* esq, Expressao* dir);
+    OperacaoBin(Tipo op, Expressao* esq, Expressao* dir);
     int avaliar() const override;
     void imprimir(int nivel) const override;
     std::string gerar_codigo() const override;
-    std::string getIdentificadores() const override;
+    std::set<std::string> getVariaveis() const override;
 };
 
 // ========================================================================

@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     // Atv6 atv6;
     // atv6.codigo_assembly(file);
 
-    // GERADOR PARA ATIVIDADE 7!!
+    // GERADOR PARA ATIVIDADE 6, 7, 8, 9!!
     Atv6 atv6;
     atv6.testes_codigo_assembly(file);
 

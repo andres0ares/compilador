@@ -1,0 +1,8 @@
+x = 5;
+resultado = 0;
+{
+if x > 3 {
+resultado = 100;
+}
+return resultado;
+}

@@ -11,11 +11,36 @@
 #include "../../models/Expressao/Expressao.h"
 #include "../../models/Declaracao/Declaracao.h"
 #include "../../models/Programa/Programa.h"
+#include "../../models/Comando/Comando.h"
 #include "../atv4/atv4.h"
 
 
 using namespace std;
 
+// <ex> ::= <exp_a> ((’<’ | ’>’ | ’==’)* <exp_a>)*
+Expressao* Atv7::expressao(Tokens& tokens) {
+    Expressao* esquerda = expAdv(tokens);
+
+    while (true) {
+        std::optional<Token> token = tokens.proximoToken();
+
+        if (!token || (token->getTipo() != Tipo::MAIOR && token->getTipo() != Tipo::MENOR && token->getTipo() != Tipo::EQUAL)) {
+            if (token) 
+                tokens.retrocedeToken(); // devolve se não for operador válido
+            break;
+        }
+
+        Expressao* direita = expAdv(tokens);
+
+        if (!direita) {
+            throw std::invalid_argument("Erro: expressão à direita de OPERADOR RELACIONAL inválida.");
+        }
+        esquerda = new OperacaoBin(token->getTipo(), esquerda, direita);
+    }
+    return esquerda;
+}
+
+//  <exp_a> ::= <exp_m> ((’+’ | ’-’) <exp_m>)*
 Expressao* Atv7::expAdv(Tokens& tokens) {
     Expressao* esquerda = expMult(tokens);
 
@@ -29,11 +54,16 @@ Expressao* Atv7::expAdv(Tokens& tokens) {
         }
 
         Expressao* direita = expMult(tokens);
-        esquerda = new OperacaoBin(token->getValue()[0], esquerda, direita);
+
+        if (!direita) {
+            throw std::invalid_argument("Erro: expressão à direita de operador '+' ou '-' inválida.");
+        }
+        esquerda = new OperacaoBin(token->getTipo(), esquerda, direita);
     }
     return esquerda;
 }
 
+// <exp_m> ::= <prim> ((’*’ | ’/’) <prim>)*
 Expressao* Atv7::expMult(Tokens& tokens) {
     Expressao* esquerda = expPrim(tokens);
 
@@ -47,11 +77,15 @@ Expressao* Atv7::expMult(Tokens& tokens) {
         }
 
         Expressao* direita = expPrim(tokens);
-        esquerda = new OperacaoBin(token->getValue()[0], esquerda, direita);
+        if (!direita) {
+            throw std::invalid_argument("Erro: expressão à direita de operador '*' ou '/' inválida.");
+        }
+        esquerda = new OperacaoBin(token->getTipo(), esquerda, direita);
     }
     return esquerda;
 }
 
+// <prim> ::= <num> | <var> | ’(’ <exp> ’)’
 Expressao* Atv7::expPrim(Tokens& tokens) {
     std::optional<Token> token = tokens.proximoToken();
 
@@ -63,25 +97,29 @@ Expressao* Atv7::expPrim(Tokens& tokens) {
     if (token->getTipo() == Tipo::SUB) {
         Expressao* termo = expPrim(tokens);
         if (!termo) 
-            return nullptr;
+            return nullptr; 
 
-        return new OperacaoBin(token->getValue()[0], new Constante(0), termo); // 0 - termo
+        return new OperacaoBin(token->getTipo(), new Constante(0), termo); // 0 - termo
     }
     
     // Identificação de número
     if (token->getTipo() == Tipo::NUMERO ) {
-        int valor = std::stoi(token->getValue());
-        return new Constante(valor);
+        try {
+            int valor = std::stoi(token->getValue());
+            return new Constante(valor);
+        } catch (...) {
+            throw std::invalid_argument("Erro: valor numérico inválido.");
+        }
     }
 
-    //Identificacao de identificador
-    if (token->getTipo() == Tipo::IDENTIFICADOR ) {
-        return new Identificador(token->getValue());
+    //Identificacao de variavel
+    if (token->getTipo() == Tipo::VARIAVEL ) {
+        return new Variavel(token->getValue());
     }
 
     // Abertura para nova expressão
     if (token->getTipo() == Tipo::PAREN_ESQ) {
-        Expressao* exp = expAdv(tokens);
+        Expressao* exp = expressao(tokens);
         std::optional<Token> proxToken = tokens.proximoToken();
 
         // Espera pelo fechamento da expressão
@@ -97,25 +135,14 @@ Expressao* Atv7::expPrim(Tokens& tokens) {
 }
 
 
-bool verifica_identificadores(Programa prog, std::string idents) {
-
-    std::stringstream ss(idents);
-    std::string ident;
-
-    while(ss >> ident) {
-        if(!prog.identificadorDeclarado(ident)) {
-            throw std::invalid_argument("Erro: Identificador nao declarado: " + ident);
-        }
-    }
-    
-    return true;
-}
-
 Programa Atv7::prog(Tokens& tokens) {
+    
+    //cria objeto programa
+    Programa programa;
 
     //le primeiro token
     std::optional<Token> token = tokens.proximoToken();
-    std::optional<Token> ident;
+    std::optional<Token> var;
     Expressao* exp;
 
     //se vazio, retorna erro
@@ -123,65 +150,100 @@ Programa Atv7::prog(Tokens& tokens) {
         throw std::invalid_argument("Erro: expressão vazia ou token inesperado no final da entrada.\n");
     }
 
-    //cria objeto programa
-    Programa programa;
+// Faz a Declaração das variáveis
+    while(token->getTipo() == Tipo::VARIAVEL) {
 
-    //para cada identificado
-    while(token->getTipo() == Tipo::IDENTIFICADOR) {
-
-        ident = token; //salva token do identificador
+        var = token; //salva token da variavel
         token = tokens.proximoToken(); //le proximo token
 
         //se nao for (=) retorna erro
         if (!token || token->getTipo() != Tipo::IGUAL) {
             token->printToken();
-            throw std::invalid_argument("Erro: esperado '=' apos identificador.\n");
+            throw std::invalid_argument("Erro: esperado '=' apos variavel.\n");
         }
 
         //le a expressao
-        exp = expAdv(tokens);
+        exp = expressao(tokens);
 
         //le proximo token e retorna erro se nao for ;
         token = tokens.proximoToken();
 
         if (!token || token->getTipo() != Tipo::PTVIRG) {
             token->printToken();
-            throw std::invalid_argument("Erro: esperado ;\n");
+            throw std::invalid_argument("Erro: esperado ; após declaração.\n");
         }
-
-        //verifica os identicadores da expressao lida
-        verifica_identificadores(programa, exp->getIdentificadores());
         
         //adiciona declaracao
-        Declaracao  declaracao(ident.value(), exp);
+        Declaracao  declaracao(var.value(), exp);
         programa.adiciona(declaracao);
 
         token = tokens.proximoToken();
     }
 
-    //espera pela token da expressao final (retorna)
-    if(token->getTipo() != Tipo::RETORNA ) {
-        token->printToken();
-        throw std::invalid_argument("Erro: esperado -> retorna.\n");
+    // Armazena os valores dos identificadores declarados
+    std::set<std::string> declaradas = programa.getVariaveisDeclaradas();
+
+// Iniciando a parte de Comandos
+    if (!token || token->getTipo() != Tipo::CHAVES_ESQ) {
+        throw std::invalid_argument("Erro: esperado '{' após declarações.");
+    }
+    
+    // Loop de comandos até encontrar 'return'
+    while (true) {
+        token = tokens.proximoToken();
+
+        if (!token)
+            throw std::invalid_argument("Erro: fim inesperado ao procurar comandos ou 'return'.");
+
+        if (token->getTipo() == Tipo::RETURN)
+            break; // fim da lista de comandos
+
+        if (token->getTipo() == Tipo::IF || token->getTipo() == Tipo::WHILE || token->getTipo() == Tipo::VARIAVEL) {
+            tokens.retrocedeToken(); // retrocede para Comando::parse consumir corretamente
+            Comando* cmd = Comando::parse(tokens, declaradas);
+            programa.adicionaComando(cmd);
+        } 
+        else {
+            token->printToken();
+            throw std::invalid_argument("Erro: Ausência de Return, token inesperado na lista de comandos.");
+        }
     }
 
-    //le expressao
-    exp = expAdv(tokens);
+    token = tokens.proximoToken();
+    tokens.retrocedeToken();
 
-    //verifica os identicadores da expressao lida
-    verifica_identificadores(programa, exp->getIdentificadores());
+    // Verifica a presença de Expressão de retorno
+    if(token &&  token->getTipo() == Tipo::PTVIRG) {
+        throw std::invalid_argument("Erro: Ausência de expressão retorno.\n");
+    }
 
-    //adiciona a expressao final
-    Declaracao  declaracao(token.value(), exp);
-    programa.adicionaFinal(declaracao);
+    //le expressao de Retorno
+    exp = expressao(tokens);
+
+    // Adiciona a expressao de retorno ao programa
+    programa.adicionaExpressao(exp);
+
+    token = tokens.proximoToken();
+    // Se não for (;), retorna erro
+    if (!token || token->getTipo() != Tipo::PTVIRG) {
+        token->printToken();
+        throw std::invalid_argument("Erro: esperado ; após expressão retorno.\n");
+    }
+
+    token = tokens.proximoToken();
+    // Se não for (}), retorna erro
+    if (!token || token->getTipo() != Tipo::CHAVES_DIR) {
+        throw std::invalid_argument("Erro: esperado '}' ao final do programa.");
+    }
 
     return programa;
-
 }
 
 std::optional<Programa> Atv7::analise_sintatico(ifstream& file) {
     Atv4 atv4;
     Tokens tokens = atv4.create_tokens(file);
+
+    // tokens.imprimeTokensValidos();
 
     if (tokens.temTokenInvalido()) {
         std::cout << "Criação dos tokens concluída com erro léxico:\n" << std::endl;
@@ -206,5 +268,8 @@ std::optional<Programa> Atv7::analise_sintatico(ifstream& file) {
         std::cerr << "\n- " << e.what() << std::endl;
         return std::nullopt;
     }
+    catch (const std::runtime_error& e) {
+        std::cerr << "\n- " << e.what() << std::endl;
+        return std::nullopt;
+    }
 }
-

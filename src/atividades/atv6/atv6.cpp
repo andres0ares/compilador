@@ -47,8 +47,7 @@ int Atv6::codigo_assembly(ifstream& file, bool test = false) {
     Atv2 atv2;
   
     try {    
-        //construcao da arvore sintatica
-        // std::optional<Expressao*> raiz = atv5.get_arvore(file);
+        // Construcao da análise sintatica
         std::optional<Programa> programa = atv7.analise_sintatico(file);
 
         if (!programa.has_value()) {
@@ -56,10 +55,8 @@ int Atv6::codigo_assembly(ifstream& file, bool test = false) {
             return 1;
         }
 
-        //programa->imprimeTokens();
-
         std::string codigo_assembly = atv2.gerarCodigoAssemblyComDeclaracao(programa->gerar_codigo(), programa->gerar_declaracoes());
-
+        
         // if(test) {
         //     std::cout <<"\nValor esperado:" << std::endl;
         //     std::cout << (programa).avaliar() << "\n" << std::endl;

@@ -8,16 +8,25 @@
 // Definição dos tipos de tokens
 enum class Tipo {
     NUMERO,
-    PAREN_ESQ,
-    PAREN_DIR,
-    IGUAL,
-    RETORNA,
-    IDENTIFICADOR,
-    PTVIRG,
-    SOMA,
-    SUB,
-    MULT,
-    DIV,
+    PAREN_ESQ,  // (
+    PAREN_DIR,  // )
+    CHAVES_ESQ, // {
+    CHAVES_DIR, // }
+    MENOR,   // <
+    MAIOR,   // >
+    EQUAL,   // ==
+    IGUAL,   // =
+    PTVIRG,  // ;
+    SUB,     // -
+    SOMA,    // +
+    DIV,     // /
+    MULT,    // *
+    IF,      // if
+    ELSE,    // else
+    WHILE,   // while
+    RETURN,  // return
+    RETORNA, 
+    VARIAVEL,
     INVALIDO
 };
 

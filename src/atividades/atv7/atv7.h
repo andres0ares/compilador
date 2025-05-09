@@ -14,12 +14,11 @@ public:
     std::optional<Programa> analise_sintatico(std::ifstream& file);
     // std::optional<Expressao*> get_arvore(std::ifstream& file);
     // std::optional<Expressao*> construirArvore(Tokens& token);
-    Expressao* expAdv(Tokens& tokens);
-    Expressao* expMult(Tokens& tokens);
-    Expressao* expPrim(Tokens& tokens);
+    static Expressao* expressao(Tokens& tokens);
+    static Expressao* expAdv(Tokens& tokens);
+    static Expressao* expMult(Tokens& tokens);
+    static Expressao* expPrim(Tokens& tokens);
     Programa prog(Tokens& tokens);
-
-
 };
 
 #endif

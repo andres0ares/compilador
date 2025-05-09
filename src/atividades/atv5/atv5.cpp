@@ -80,7 +80,7 @@ Expressao* construirArvore(Tokens& tokens) {
         if (!parentesesDir || parentesesDir->getTipo() != Tipo::PAREN_DIR) {
             throw std::invalid_argument("Parêntese de fechamento ausente\n");
         }
-        return new OperacaoBin(operador->getValue()[0], esquerda, direita);
+        return new OperacaoBin(operador->getTipo(), esquerda, direita);
     }
     throw std::invalid_argument("Erro: Expressão malformada");
 }

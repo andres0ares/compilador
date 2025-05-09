@@ -15,29 +15,47 @@ Programa::Programa() {
     indiceAtual = 0;
 }
 
+std::set<std::string> Programa::getVariaveisDeclaradas() const {
+    std::set<std::string> vars;
+    for (const auto& decl : declaracoes) {
+        std::set<std::string> varsDecl = decl.getVariaveis();
+        vars.insert(varsDecl.begin(), varsDecl.end());  // insere todos os elementos do conjunto
+    }
+    return vars;
+}
+
 // Adiciona um token à lista
 void Programa::adiciona(const Declaracao& declaracao) {
     declaracoes.push_back(declaracao);
 }
 
-void Programa::adicionaFinal(const Declaracao& declaracao) {
-    dec_final = declaracao;
+void Programa::adicionaExpressao(Expressao* expressao) {
+    expressao_retorno = expressao;
 }
 
 void Programa::imprimeTokens() const {
     for (const auto& declaracao : declaracoes) {
         declaracao.printToken();
     }
-    dec_final->printToken();
 }
 
-bool Programa::identificadorDeclarado(std::string ident) const {
+bool Programa::variavelDeclarada(const std::string& var) const {
     for (const auto& declaracao : declaracoes) {
-        if(declaracao.getIdentificador() == ident) {
+        std::set<std::string> vars = declaracao.getVariaveis();
+        if (vars.find(var) != vars.end()) {
             return true;
         }
     }
     return false;
+}
+
+
+void Programa::adicionaComando(Comando* cmd) {
+    comandos.push_back(cmd);
+}
+
+const std::vector<Comando*>& Programa::getComandos() const {
+    return comandos;
 }
 
 std::string Programa::gerar_declaracoes() const {
@@ -49,7 +67,7 @@ std::string Programa::gerar_declaracoes() const {
     }
 
     for (const auto& declaracao : declaracoes) {
-        saida += "\n        .lcomm " + declaracao.getIdentificador() + ", 8";
+        saida += "\n        .lcomm " + declaracao.getTokenLexema() + ", 8";
     }
 
     return R"(
@@ -61,14 +79,19 @@ std::string Programa::gerar_declaracoes() const {
 
 std::string Programa::gerar_codigo() const {
 
-    std::string saida = "";
+    std::string saida = "\n";
 
     for (const auto& declaracao : declaracoes) {
-        saida += "\n" + declaracao.gerar_codigo();
-        saida += "\n        mov %rax, " + declaracao.getIdentificador(); 
+        saida += declaracao.gerar_codigo();
+        saida += "\n        mov %rax, " + declaracao.getTokenLexema() + "\n"; 
+    }
+    saida += "\n";
+
+    for (const auto& cmd : comandos) {
+        saida += cmd->gerar_codigo();
     }
 
-    saida += "\n" + dec_final->gerar_codigo();
+    saida += expressao_retorno->gerar_codigo();
 
     return saida;
 }
